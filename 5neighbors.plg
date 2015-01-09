@@ -1,0 +1,588 @@
+/*-------------------------------------------------------------------*/
+/**
+ * house_solution(+Blue_Nationality : var, +Blue_Pet : var, +Blue_Drink : var, +Blue_Dessert : var,
+ * +Green_Nationality  : var, +Green_Pet : var, +Green_Drink : var, +Green_Dessert : var,
+ * +Ivory_Nationality : var, +Ivory_Pet : var, +Ivory_Drink : var, +Ivory_Dessert : var,
+ * +Red_Nationality : var, +Red_Pet : var, +Red_Drink : var, +Red_Dessert  : var,
+ * +Yellow_Nationality : var, +Yellow_Pet : var, +Yellow_Drink : var, +Yellow_Dessert : var).
+ *
+ * The 'house_solution' predicate takes five sets of variables,
+ * each representing a house and solves the puzzle based on clues provided.
+ *
+ * @param Blue_Nationality The nationality of the person in the blue house.
+ * @param Blue_Pet The pet of the person in the blue house.
+ * @param Blue_Drink The drink of the person in the blue house.
+ * @param Blue_Dessert The dessert of the person in the blue house.
+ * @param Green_Nationality The nationality of the person in the green house.
+ * @param Green_Pet The pet of the person in the green house.
+ * @param Green_Drink The drink of the person in the green house.
+ * @param Green_Dessert The dessert of the person in the green house.
+ * @param Ivory_Nationality The nationality of the person in the ivory house.
+ * @param Ivory_Pet The pet of the person in the ivory house.
+ * @param Ivory_Drink The drink of the person in the ivory house.
+ * @param Ivory_Dessert The dessert of the person in the ivory house.
+ * @param Red_Nationality The nationality of the person in the red house.
+ * @param Red_Pet The pet of the person in the red house.
+ * @param Red_Drink The drink of the person in the red house.
+ * @param Red_Dessert The dessert of the person in the red house.
+ * @param Yellow_Nationality The nationality of the person in the yellow house.
+ * @param Yellow_Pet The pet of the person in the yellow house.
+ * @param Yellow_Drink The drink of the person in the yellow house.
+ * @param Yellow_Dessert The dessert of the person in the yellow house.
+ *
+ * Examples:
+ *
+ * ?- house_solution(Blue_Nationality,Blue_Pet,Blue_Drink,Blue_Dessert,Green_Nationality,Green_Pet,Green_Drink,Green_Dessert,Ivory_Nationality,Ivory_Pet,Ivory_Drink,Ivory_Dessert,Red_Nationality,Red_Pet,Red_Drink,Red_Dessert,Yellow_Nationality,Yellow_Pet,Yellow_Drink,Yellow_Dessert).
+ * [Blue_Nationality = ukrainian,
+ *  Blue_Pet = snails,
+ *  Blue_Drink = tea,
+ *  Blue_Dessert = ice_cream,
+ *  Green_Nationality = spaniard,
+ *  Green_Pet = dog,
+ *  Green_Drink = coffee,
+ *  Green_Dessert = cake,
+ *  Ivory_Nationality = japanese,
+ *  Ivory_Pet = horse,
+ *  Ivory_Drink = milk,
+ *  Ivory_Dessert = mousse,
+ *  Red_Nationality = englishman,
+ *  Red_Pet = fox,
+ *  Red_Drink = orange_juice,
+ *  Red_Dessert = chocolate,
+ *  Yellow_Nationality = norwegian,
+ *  Yellow_Pet = zebra,
+ *  Yellow_Drink = water,
+ *  Yellow_Dessert = pie]
+ *
+ */
+
+house_solution(Blue_Nationality,Blue_Pet,Blue_Drink,Blue_Dessert,Green_Nationality,Green_Pet,Green_Drink,Green_Dessert,Ivory_Nationality,Ivory_Pet,Ivory_Drink,Ivory_Dessert,Red_Nationality,Red_Pet,Red_Drink,Red_Dessert,Yellow_Nationality,Yellow_Pet,Yellow_Drink,Yellow_Dessert) :-
+	length(Street,5),
+	house(House1,blue,Blue_Nationality,Blue_Pet,Blue_Drink,Blue_Dessert), 
+	house(House2,red,Red_Nationality,Red_Pet,Red_Drink,Red_Dessert), 
+	house(House3,green,Green_Nationality,Green_Pet,Green_Drink,Green_Dessert), 
+	house(House4,ivory,Ivory_Nationality,Ivory_Pet,Ivory_Drink, Ivory_Dessert), 
+	house(House5,yellow,Yellow_Nationality,Yellow_Pet,Yellow_Drink, Yellow_Dessert), 
+	street(House1,House2,House3,House4,House5,Street),
+	clue1(Street),
+	clue2(Street),
+	clue3(Street),
+	clue4(Street),
+	clue5(Street),
+	clue6(Street),
+	clue7(Street),
+	clue8(Street),
+	clue9(Street),
+	clue10(Street),
+	clue11(Street),
+	clue12(Street),
+	clue13(Street),
+	clue14(Street),
+	clue15(Street), 		
+	clue_implied(Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * house(?House : list, +Color : var, +Nationality : var, +Pet : var, +Drink, +Dessert : var)
+ * house(+House : list, +Color : var, ?Nationality : var, ?Pet : var, ?Drink, ?Dessert : var)
+ *
+ * The 'house' predicate takes the five characteristics of the house.
+ * It succeeds if the House characteristics match the arguments provided.
+ *
+ * @param House The list of the characteristics of the house.
+ * @param Color The color of the house.
+ * @param Nationality The nationality of the person in the house.
+ * @param Pet The pet in the house.
+ * @param Drink The drink preferred in the house.
+ * @param Dessert The dessert perferred in the house.
+ * 
+ * Examples:
+ *
+ * ?- house(House,red,englishman,dog, milk, pie).
+ * [House = [red, englishman, dog, milk, pie]]
+ *
+ * ?- house([red, englishman, dog, milk, pie],red, englishman, dog, milk, pie).
+ * true
+ *
+ * ?- house([blue, englishman, dog, milk, pie],red, englishman, dog, milk, pie).
+ * false
+ *
+ */
+
+house(House,Color,Nationality,Pet, Drink, Dessert) :-
+	House = [Color,Nationality,Pet, Drink, Dessert].
+
+/*-------------------------------------------------------------------*/
+/**
+ * street(+House1 : var, +House2 : var, +House3 : var, +House4 : var, +House5 : var, ?Street : var)
+ *
+ * The 'street' predicate takes five 'house' list and checks if they are
+ * in the 'street' list.
+ *
+ * @param House1 The list of the characteristics of house1.
+ * @param House2 The list of the characteristics of house2.
+ * @param House3 The list of the characteristics of house3.
+ * @param House4 The list of the characteristics of house4.
+ * @param House5 The list of the characteristics of house5.
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- street(h1,h2,h3,h4,h5,[h1,h2,h3,h4,h5]).
+ * true
+ *
+ * ?- street(h1,h2,h3,h4,h5,[h1,h2,h3,h4]).
+ * false
+ */
+
+street(House1,House2,House3,House4,House5,Street) :-
+	member(House1,Street),
+	member(House2,Street),
+	member(House3,Street),
+	member(House4,Street),
+	member(House5,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * is_house_in_street(+House : var, ?Street : var)
+ *
+ * The 'is_house_in_street' predicate takes a 'house' list and checks its
+ * in the 'street' list.
+ *
+ * @param House The list of the characteristics of a house.
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- is_house_in_street(h1,[h1,h2,h3,h4,h5]).
+ * true
+ *
+ * ?- is_house_in_street(h5,[h1,h2,h3,h4]).
+ * false
+ */
+
+is_house_in_street(House,Street) :-
+	member(House,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * right_side(+HouseX : var, +HouseY : var, ?Street : var)
+ *
+ * The 'right_side' predicate takes two 'house' lists and checks if  
+ * House Y is to the immediate right of House X in the street.
+ *
+ * @param HouseX The list of the characteristics of a house.
+ * @param HouseY The list of the characteristics of a house.
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- right_side(h1,h2,[h1,h2,h3,h4,h5]).
+ * true
+ *
+ * ?- right_side(h2,h4,[h1,h2,h3,h4,h5]).
+ * false
+ *
+ */
+
+right_side(HouseX,HouseY,Street):- 	
+	append(_,[HouseX,HouseY|_],Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * next_adjacent(+HouseX : var, +HouseY : var, ?Street : var)
+ *
+ * The 'next_adjacent' predicate takes two 'house' lists and checks if they 
+ * are adjacent to each other in the street.
+ *
+ * @param HouseX The list of the characteristics of a house.
+ * @param HouseY The list of the characteristics of a house.
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- next_adjacent(h3,h2,[h1,h2,h3,h4,h5]).
+ * true
+ *
+ * ?- next_adjacent(h2,h4,[h1,h2,h3,h4,h5]).
+ * false
+ *
+ */
+next_adjacent(HouseX,HouseY,Street):- 	
+	append(_,[HouseX,HouseY|_],Street); 
+	append(_,[HouseY,HouseX|_],Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue1(+Street : var)
+ *
+ * The 'clue1' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The englishman lives in the red house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue1([[red,englishman,horse,milk,pie]]).
+ * true
+ *
+ * ?- clue1([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue1(Street) :-
+	house(HouseC1,red,englishman,_,_,_),
+	is_house_in_street(HouseC1,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue2(+Street : var)
+ *
+ * The 'clue2' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The spaniard owns the dog
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue2([[red,spaniard,dog,milk,pie]]).
+ * true
+ *
+ * ?- clue2([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue2(Street) :-
+	house(HouseC2,_,spaniard,dog,_,_),
+	is_house_in_street(HouseC2,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue3(+Street : var)
+ *
+ * The 'clue3' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * Coffee is drunk in the green house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue3([[green,spaniard,dog,coffee,pie]]).
+ * true
+ *
+ * ?- clue3([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue3(Street) :-
+	house(HouseC3,green,_,_,coffee,_),
+	is_house_in_street(HouseC3,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue4(+Street : var)
+ *
+ * The 'clue4' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The ukranian drinks tea
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue4([[red,ukrainian,dog,tea,pie]]).
+ * true
+ *
+ * ?- clue4([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue4(Street) :-
+	house(HouseC4,_,ukrainian,_,tea,_),
+	is_house_in_street(HouseC4,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue5(+Street : var)
+ *
+ * The 'clue5' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The green house is to the immediate right of the ivory house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue5([[ivory,spaniard,dog,milk,pie],[green,englishman,zebra,water,cake]]).
+ * true
+ *
+ * ?- clue5([[ivory,spaniard,dog,milk,pie],[red,englishman,zebra,water,cake]]).
+ * false
+ *
+ */
+clue5(Street) :-
+	house(HouseC5X,ivory,_,_,_,_),
+	house(HouseC5Y,green,_,_,_,_),
+	right_side(HouseC5X,HouseC5Y,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue6(+Street : var)
+ *
+ * The 'clue6' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The ice cream eater owns snails
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue6([[red,spaniard,snails,milk,ice_cream]]).
+ * true
+ *
+ * ?- clue6([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue6(Street) :-
+	house(HouseC6,_,_,snails,_,ice_cream),
+	is_house_in_street(HouseC6,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue7(+Street : var)
+ *
+ * The 'clue7' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * Pie is preferred in the yellow house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue7([[yellow,spaniard,dog,milk,pie]]).
+ * true
+ *
+ * ?- clue7([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue7(Street) :-
+	house(HouseC7,yellow,_,_,_,pie),
+	is_house_in_street(HouseC7,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue8(+Street : var)
+ *
+ * The 'clue8' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * Milk is drunk in the middle house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue8([[],[],[red,spaniard,dog,milk,pie],[],[]]).
+ * true
+ *
+ * ?- clue8([[blue,englishman,horse,tea,pie]]).
+ * false
+ *
+ */
+clue8(Street) :-
+	house(HouseC8,_,_,_,milk,_),
+	Street = [_,_,HouseC8,_,_].
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue9(+Street : var)
+ *
+ * The 'clue9' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The norwegian lives in the first house on the left
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue9([[red,norwegian,dog,milk,pie],[],[],[],[]]).
+ * true
+ *
+ * ?- clue9([[blue,englishman,horse,milk,pie]]).
+ * false
+ *
+ */
+clue9(Street) :-
+	house(HouseC9,_,norwegian,_,_,_),
+	Street =[HouseC9,_,_,_,_].
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue10(+Street : var)
+ *
+ * The 'clue10' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The cake lover lives next to the man with the fox
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue10([[ivory,spaniard,dog,milk,cake],[green,englishman,fox,coffee,mousse]]).
+ * true
+ *
+ * ?- clue10([[blue,englishman,horse,milk,pie],[ivory,spaniard,dog,milk,cake]]).
+ * false
+ *
+ */
+clue10(Street) :-
+	house(HouseC10X,_,_,_,_,cake),
+	house(HouseC10Y,_,_,fox,_,_),
+	next_adjacent(HouseC10X,HouseC10Y,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue11(+Street : var)
+ *
+ * The 'clue11' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * Cake is preferred in the house adjacent to the horse's house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue11([[ivory,spaniard,dog,milk,cake],[green,englishman,horse,coffee,mousse]]).
+ * true
+ *
+ * ?- clue11([[ivory,spaniard,dog,milk,cake],[green,englishman,fox,coffee,mousse]]).
+ * false
+ *
+ */
+clue11(Street) :-
+	house(HouseC11X,_,_,_,_,cake),
+	house(HouseC11Y,_,_,horse,_,_),
+	next_adjacent(HouseC11X,HouseC11Y,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue12(+Street : var)
+ *
+ * The 'clue12' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The chocolate lover drinks orange juice
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue12([[ivory,spaniard,dog,orange_juice,chocolate]]).
+ * true
+ *
+ * ?- clue12([[ivory,spaniard,dog,orange_juice,mousse]]).
+ * false
+ *
+ */
+clue12(Street) :-
+	house(HouseC12,_,_,_,orange_juice,chocolate),
+	is_house_in_street(HouseC12,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue13(+Street : var)
+ *
+ * The 'clue13' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The japanese man loves mousse
+ *
+ * @param Street The list of 'house' lists.
+ *
+ *
+ * Examples:
+ *
+ * ?- clue13([[ivory,japanese,dog,milk,mousse]]).
+ * true
+ *
+ * ?- clue13([[ivory,japanese,dog,milk,cake]]).
+ * false
+ *
+ */
+clue13(Street) :-
+	house(HouseC13,_,japanese,_,_,mousse),
+	is_house_in_street(HouseC13,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue14(+Street : var)
+ *
+ * The 'clue14' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The norwegian lives next to the blue house
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue14([[blue,spaniard,dog,milk,cake],[green,norwegian,fox,coffee,mousse]]).
+ * true
+ *
+ * ?- clue14([[green,spaniard,dog,milk,cake],[green,norwegian,fox,coffee,mousse]]).
+ * false
+ *
+ */
+clue14(Street) :-
+	house(HouseC14X,_,norwegian,_,_,_),
+	house(HouseC14Y,blue,_,_,_,_),
+	next_adjacent(HouseC14X,HouseC14Y,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue15(+Street : var)
+ *
+ * The 'clue15' predicate checks for a 'house' in the street list
+ * that satisfies the clue of the problem
+ * The englishman owns the fox
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue15([[green,englishman,fox,coffee,mousse]]).
+ * true
+ *
+ * ?- clue15([[green,spaniard,fox,coffee,mousse]]).
+ * false
+ *
+ */
+clue15(Street) :-
+	house(HouseC15,_,englishman,fox,_,_),
+	is_house_in_street(HouseC15,Street).
+
+/*-------------------------------------------------------------------*/
+/**
+ * clue_implied(+Street : var)
+ *
+ * The 'clue_implied' predicate completes the missing elements of the house
+ * characteristics not mentioned in the clues
+ * such as zebra and water
+ *
+ * @param Street The list of 'house' lists.
+ *
+ * Examples:
+ *
+ * ?- clue_implied([[ivory,spaniard,zebra,water,cake]]).
+ * true
+ *
+ * ?- clue_implied([[ivory,spaniard,zebra,milk,cake]]).
+ * false
+ *
+ */
+clue_implied(Street) :-
+	house(HouseCX,_,_,zebra,_,_),
+	house(HouseCY,_,_,_,water,_),
+	is_house_in_street(HouseCX,Street),
+	is_house_in_street(HouseCY,Street).
